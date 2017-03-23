@@ -1,16 +1,14 @@
-# threading 
+# python-parallel
+
 Demonstrates basic functionality of Python 
 [threading](https://docs.python.org/3.5/library/threading.html) 
 module in Python3.x to perform parallel operations on a single node (following
 the SMP paradigm). 
 
-Includes a test script to ensure that multithreading is working and a 
-`compute_pi.py` script illustrating estimating pi. 
-
 ## Getting started
 To load/create a conda environment and its (ACCRE) package dependencies:
 ```bash
-$ source source_file.sh [conda_enviroment_name]
+$ source job.sh [conda_enviroment_name]
 ```
 
 ### Batch mode
@@ -20,12 +18,13 @@ $ sbatch batch_job.slurm
 
 ### Debug mode
 ```
-$ salloc --partition=debug --nodes=1
+$ salloc --partition=debug --nodes=2 --tasks-per-node=4
 ```
 
 # A practical(?) example
 
-From [Rosetta Code](http://rosettacode.org/wiki/Parallel_Brute_Force#Python)
+In the Ipython notebooks, we address the following coding problem
+from [Rosetta Code](http://rosettacode.org/wiki/Parallel_Brute_Force#Python)
 
 > Task
 
@@ -37,10 +36,3 @@ From [Rosetta Code](http://rosettacode.org/wiki/Parallel_Brute_Force#Python)
 
 > Your program should naively iterate through all possible passwords consisting only of five lower-case ASCII English letters. It should use concurrent or parallel processing, if your language supports that feature. You may calculate SHA-256 hashes by calling a library or through a custom implementation. Print each matching password, along with its SHA-256 hash.
 
-## Setup
-
-We need to process chunks of data in each process, and we need the load to be balanced among all the tasks. We use the `Client` method `load_balanced_view`.
-
-## The worker function
-
-The total number of passwords we need to try is $26^5$, so we'll pass each integer from $0$ to $26^5$ and map it to it's corresponding word and hash. Essentially, what we need to do is convert each base-10 integer to base-26; to get the first letter of the word, we divide by $26^4$ to get a value in the range $0-25$. Then, we take the remainder and divide by $26^3$ to get the second letter and so on. To get the ASCII value for each letter, we have to add $97$. Finally, we compute the sha256 digest.
